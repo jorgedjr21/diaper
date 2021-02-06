@@ -8,7 +8,7 @@ class DashboardController < ApplicationController
     @recent_donations = @donations.recent
     @purchases = current_organization.purchases.includes(:line_items).during(helpers.selected_range)
     @recent_purchases = @purchases.recent
-    @partner_agencies = current_organization.partners.includes(:line_items).during(helpers.selected_range)
+    @partner_agencies = current_organization.partners.during(helpers.selected_range)
 
     @recent_distributions = current_organization.distributions.includes(:line_items).during(helpers.selected_range).recent
     if Flipper.enabled?(:itemized_distributions, current_user)
