@@ -173,7 +173,7 @@
           <div class="card-body">
             <div class="box-body text-center float-center">
               <%= new_button_to new_partner_path, {text: "New Partner"} %>
-              <h3 class="text-center">200 Parterns <%= @selected_date_range_label %></h3>
+              <h3 class="text-center"><%= @partner_agencies.count %> Parterns <%= @selected_date_range_label %></h3>
             </div>
           </div>
         </div>

@@ -113,8 +113,8 @@ RSpec.describe "Dashboard", type: :system, js: true do
       end
 
       describe 'Partnert Agencies and Service Area' do
-        let(:partner_agency1) { create(:partner, created_at: Time.zone.today - 1.year) }
-        let(:partner_agency2) { create(:partner, created_at: Time.zone.today - 1.year) }
+        let(:partner_agency1) { create(:partner, created_at: Time.zone.today) }
+        let(:partner_agency2) { create(:partner, created_at: Time.zone.today - 7.days) }
         let(:partner_agency3) { create(:partner, created_at: Time.zone.today - 1.5.years) }
 
         it 'has a link to create a new partner agency' do
@@ -122,6 +122,19 @@ RSpec.describe "Dashboard", type: :system, js: true do
           expect(page).to have_css('#partners')
           within '#donations' do
             expect(page).to have_xpath("//a[@href='#{new_partner_path(organization_id: @organization.to_param)}']", visible: false)
+          end
+        end
+
+        it 'must have two partners in count' do
+          visit subject
+          within '#partners' do
+            expect(page).to have_content('2')
+          end
+
+          partner_agency2.update(created_at: Time.zone.today - 2.years)
+          visit subject
+          within '#partners' do
+            expect(page).to have_content('1')
           end
         end
       end
