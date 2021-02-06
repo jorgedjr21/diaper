@@ -112,6 +112,20 @@ RSpec.describe "Dashboard", type: :system, js: true do
         end
       end
 
+      describe 'Partnert Agencies and Service Area' do
+        let(:partner_agency1) { create(:partner, created_at: Time.zone.today - 1.year) }
+        let(:partner_agency2) { create(:partner, created_at: Time.zone.today - 1.year) }
+        let(:partner_agency3) { create(:partner, created_at: Time.zone.today - 1.5.years) }
+
+        it 'has a link to create a new partner agency' do
+          visit subject
+          expect(page).to have_css('#partners')
+          within '#donations' do
+            expect(page).to have_xpath("//a[@href='#{new_partner_path(organization_id: @organization.to_param)}']", visible: false)
+          end
+        end
+      end
+
       describe "Donations" do
         around do |example|
           travel_to(date_to_view)
