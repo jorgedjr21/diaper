@@ -137,6 +137,34 @@ RSpec.describe "Dashboard", type: :system, js: true do
             expect(page).to have_content('1')
           end
         end
+
+        describe "This Year" do
+          before do
+            visit subject
+            date_range_picker_select_range "This Year"
+            click_on "Filter"
+          end
+
+          it "has a widget displaying the year-to-date Partner Totals, only using partners created this year" do
+            within "#partners" do
+              expect(page).to have_content('2')
+            end
+          end
+        end
+
+        describe "Today" do
+          before do
+            visit subject
+            date_range_picker_select_range "Today"
+            click_on "Filter"
+          end
+
+          it "has a widget displaying today's Parnters, only using partners created today" do
+            within "#partners" do
+              expect(page).to have_content('1')
+            end
+          end
+        end
       end
 
       describe "Donations" do
