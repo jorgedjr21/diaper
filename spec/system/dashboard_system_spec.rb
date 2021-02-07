@@ -114,8 +114,9 @@ RSpec.describe "Dashboard", type: :system, js: true do
 
       describe 'Partnert Agencies and Service Area' do
         let(:partner_agency1) { create(:partner, created_at: Time.zone.today) }
-        let(:partner_agency2) { create(:partner, created_at: Time.zone.today - 7.days) }
-        let(:partner_agency3) { create(:partner, created_at: Time.zone.today - 1.5.years) }
+        let(:partner_agency2) { create(:partner, created_at: Time.zone.today - 1.day) }
+        let(:partner_agency3) { create(:partner, created_at: Time.zone.today - 7.days) }
+        let(:partner_agency4) { create(:partner, created_at: Time.zone.today - 1.5.years) }
 
         it 'has a link to create a new partner agency' do
           visit subject
@@ -128,13 +129,13 @@ RSpec.describe "Dashboard", type: :system, js: true do
         it 'must have two partners in count' do
           visit subject
           within '#partners' do
-            expect(page).to have_content('2')
+            expect(page).to have_content('3')
           end
 
           partner_agency2.update(created_at: Time.zone.today - 2.years)
           visit subject
           within '#partners' do
-            expect(page).to have_content('1')
+            expect(page).to have_content('2')
           end
         end
 
@@ -147,7 +148,7 @@ RSpec.describe "Dashboard", type: :system, js: true do
 
           it "has a widget displaying the year-to-date Partner Totals, only using partners created this year" do
             within "#partners" do
-              expect(page).to have_content('2')
+              expect(page).to have_content('3')
             end
           end
         end
@@ -162,6 +163,35 @@ RSpec.describe "Dashboard", type: :system, js: true do
           it "has a widget displaying today's Parnters, only using partners created today" do
             within "#partners" do
               expect(page).to have_content('1')
+            end
+          end
+        end
+
+        describe "Yesterday" do
+          before do
+            visit subject
+            date_range_picker_select_range "Yesterday"
+            click_on "Filter"
+          end
+
+          it "has a widget displaying today's Parnters, only using partners created yesterday" do
+            within "#partners" do
+              expect(page).to have_content('1')
+            end
+          end
+        end
+
+        describe "This Week" do
+          let(:total) { Partner.where(created_at: Time.zone.now..(Time.zone.now - 7.days)).count }
+          before do
+            visit subject
+            date_range_picker_select_range "Last 7 Days"
+            click_on "Filter"
+          end
+
+          it "has a widget displaying today's Parnters, only using partners created this week" do
+            within "#partners" do
+              expect(page).to have_content(total)
             end
           end
         end
