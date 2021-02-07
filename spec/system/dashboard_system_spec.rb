@@ -189,9 +189,24 @@ RSpec.describe "Dashboard", type: :system, js: true do
             click_on "Filter"
           end
 
-          it "has a widget displaying today's Parnters, only using partners created this week" do
+          it "has a widget displaying today's Parnters, only using partners created an week period" do
             within "#partners" do
-              expect(page).to have_content(total)
+              expect(page).to have_content(total.to_s)
+            end
+          end
+        end
+
+        describe "This Month" do
+          let(:total) { Partner.where(created_at: Time.zone.now..(Time.zone.now - 30.days)).count }
+          before do
+            visit subject
+            date_range_picker_select_range "Last 30 Days"
+            click_on "Filter"
+          end
+
+          it "has a widget displaying today's Parnters, only using partners created in an month period" do
+            within "#partners" do
+              expect(page).to have_content(total.to_s)
             end
           end
         end
