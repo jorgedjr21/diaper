@@ -176,14 +176,18 @@
               <h3 class="text-center"><%= @partner_agencies.count %> Parterns <%= @selected_date_range_label %></h3>
               <div class="box-body">
                 <div class="row">
-                  <div class="col-md-6">
-                    <h4>Partner Agencies types</h4>
-                    <%= render partial: 'partner_agencies_types' %>
-                  </div>
-                  <div class="col-md-6">
-                    <h4>Service Area - zip codes</h4>
-                    <%= render partial: 'service_area' %>
-                  </div>
+                  <% if @total_agencies_types.present? %>
+                    <div class="col-md-6">
+                      <h4>Partner Agencies types</h4>
+                      <%= render partial: 'partner_agencies_types' %>
+                    </div>
+                  <% end %>
+                  <% if @service_area.present? %>
+                    <div class="col-md-6">
+                      <h4>Service Area - zip codes</h4>
+                      <%= render partial: 'service_area' %>
+                    </div>
+                  <% end %>
                 </div>
               </div>
             </div>
