@@ -117,6 +117,15 @@ RSpec.describe "Dashboard", type: :system, js: true do
         let(:partner_agency2) { create(:partner, created_at: Time.zone.today - 1.day) }
         let(:partner_agency3) { create(:partner, created_at: Time.zone.today - 7.days) }
         let(:partner_agency4) { create(:partner, created_at: Time.zone.today - 1.5.years) }
+        include_examples 'partner reporter service stubs'
+
+        before do
+          results = prepare_results([partner1, partner2, partner3, partner4])
+          stub_partner_call_result(partner: partner1, results: results)
+          stub_partner_call_result(partner: partner2, results: results)
+          stub_partner_call_result(partner: partner3, results: results)
+          stub_partner_call_result(partner: partner4, results: results)
+        end
 
         it 'has a link to create a new partner agency' do
           visit subject
@@ -207,6 +216,18 @@ RSpec.describe "Dashboard", type: :system, js: true do
           it "has a widget displaying today's Parnters, only using partners created in an month period" do
             within "#partners" do
               expect(page).to have_content(total.to_s)
+            end
+          end
+        end
+
+        describe 'Partner Agencies types' do
+          before do
+            visit subject
+          end
+
+          it 'total of Family Resource Center' do
+            within "#partners" do
+              expect(page).to have_content('Family Resource Center (2)')
             end
           end
         end
