@@ -10,7 +10,7 @@ module PartnerReporterService
 
     partners.each do |partner|
       partner_agency = DiaperPartnerClient.get(id: partner.id)
-      next if partner_agency.blank?
+      next if partner_agency.blank? || partner_agency[:agency_type].blank?
 
       agency_type = partner_agency[:agency_type].to_s
       total[agency_type] ||= 0
