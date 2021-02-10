@@ -1,7 +1,9 @@
 module PartnerReporterService
+  REPORT_FOR_DEVELOPMENT = [{ 'type1' => 2, 'type2' => 1 }, %w(1111 2222)].freeze
+
   def self.partner_types_and_zipcodes(partners:)
     return [] if partners.blank?
-    return [{ 'type1' => 2, 'type2' => 1 }, %w(1111 2222)] if Rails.env.development?
+    return REPORT_FOR_DEVELOPMENT if Rails.env.development?
 
     total = {}
     zipcodes = []
@@ -10,8 +12,9 @@ module PartnerReporterService
       partner_agency = DiaperPartnerClient.get(id: partner.id)
       next if partner_agency.blank?
 
-      total[(partner_agency[:agency_type]).to_s] = 0 if total[(partner_agency[:agency_type]).to_s].blank?
-      total[(partner_agency[:agency_type]).to_s] += 1
+      agency_type = partner_agency[:agency_type].to_s
+      total[agency_type] ||= 0
+      total[agency_type] += 1
       zipcodes << partner_agency[:address][:zip_code]
     end
 
